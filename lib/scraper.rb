@@ -7,9 +7,13 @@ class Scraper
     html = open(index_url)
     students = []
     index = Nokogiri::HTML(html)
-    index.css(".student-card").create_from_collection
-    ofile_url] = './fixtures/student-site/' + profile_path
-      students << student_details
+    index.css(".student-card").collect do |student|
+      hash = {
+        name: student.css("h4.student-name").text,
+        location: student.css("p.student-location").text,
+        profile_url: "http://students.learn.co/" + student.css("a").attribute("href")
+      }
+      students << hash
     end
     students
   end
